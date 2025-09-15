@@ -18,14 +18,15 @@ function ComplaintForm() {
   };
 
   return (
-    <div className="card bg-white shadow-lg border max-w-4xl mx-auto">
-      <div className="card-body p-10">
-        <h2 className="card-title mb-8 text-3xl font-bold">Submit a Complaint</h2>
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 ml-0 lg:ml-64">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-8">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Submit a Complaint</h2>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="form-control w-full">
             <label className="label pb-3">
-              <span className="label-text font-semibold text-lg p-3">
+              <span className="label-text font-semibold text-lg p-3 text-gray-700 dark:text-gray-300">
                 Category
               </span>
             </label>
@@ -121,6 +122,7 @@ function ComplaintForm() {
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

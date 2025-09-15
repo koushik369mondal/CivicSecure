@@ -3,7 +3,7 @@ import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
 import ComplaintForm from "./components/ComplaintForm";
 import Profile from "./components/Profile";
-import VerifyAadhaar from "./components/VerifyAadhaar"; // Import your component
+import AadhaarVerification from "./components/shared/AadhaarVerification"; // Import your component
 import { FaBars } from "react-icons/fa";
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
       case "profile":
         return <Profile setCurrentPage={setCurrentPage} theme={theme} />;
       case "aadhaar-verify":
-        return <VerifyAadhaar setCurrentPage={setCurrentPage} theme={theme} />; // Use VerifyAadhaar
+        return <AadhaarVerification setCurrentPage={setCurrentPage} theme={theme} />; // Use AadhaarVerification
       case "track-status":
       case "info-hub":
       case "community":
@@ -62,7 +62,7 @@ function App() {
           <h1 className="text-xl font-bold text-green-800 dark:text-green-400 ml-3">CivicSecure</h1>
         </div>
 
-        <main className="flex-grow p-8 overflow-auto">{renderContent()}</main>
+        <main className="flex-grow overflow-auto">{renderContent()}</main>
       </div>
     </div>
   );

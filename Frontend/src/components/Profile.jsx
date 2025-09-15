@@ -38,8 +38,9 @@ export default function Profile({ setCurrentPage }) {
   };
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">User Profile</h2>
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 ml-0 lg:ml-64">
+      <div className="max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">User Profile</h2>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Profile Photo Section */}
@@ -65,7 +66,7 @@ export default function Profile({ setCurrentPage }) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-gray-500 text-base hover:text-green-600 transition-colors duration-200">
+              <div className="flex flex-col items-center justify-center h-full text-gray-600 dark:text-gray-400 text-base hover:text-green-600 transition-colors duration-200">
                 <svg className="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
@@ -74,14 +75,14 @@ export default function Profile({ setCurrentPage }) {
             )}
           </div>
           
-          <p className="text-sm text-gray-500 mt-2">Click photo area to upload • JPG, PNG or GIF (max 5MB)</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Click photo area to upload • JPG, PNG or GIF (max 5MB)</p>
         </div>
 
         {/* Form Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Username */}
           <div>
-            <label htmlFor="username" className="block text-base font-medium text-gray-700 mb-2">
+            <label htmlFor="username" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
               Username
             </label>
             <input
@@ -97,7 +98,7 @@ export default function Profile({ setCurrentPage }) {
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email Address
             </label>
             <input
@@ -113,7 +114,7 @@ export default function Profile({ setCurrentPage }) {
 
           {/* Phone Number */}
           <div>
-            <label htmlFor="phone" className="block text-base font-medium text-gray-700 mb-2">
+            <label htmlFor="phone" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
               Phone Number
             </label>
             <input
@@ -129,7 +130,7 @@ export default function Profile({ setCurrentPage }) {
 
           {/* Aadhaar Number with Verification Status */}
           <div>
-            <label htmlFor="aadhaar" className="block text-base font-medium text-gray-700 mb-2">
+            <label htmlFor="aadhaar" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
               Aadhaar Number
             </label>
             <input
@@ -146,7 +147,7 @@ export default function Profile({ setCurrentPage }) {
             
             {/* Aadhaar Verification Status */}
             <div className="mt-2 flex items-center gap-2">
-              <span className="text-sm text-gray-600">Status:</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Status:</span>
               {aadhaarVerified ? (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -180,6 +181,7 @@ export default function Profile({ setCurrentPage }) {
           </button>
         </div>
       </form>
+      </div>
     </div>
   );
 }
