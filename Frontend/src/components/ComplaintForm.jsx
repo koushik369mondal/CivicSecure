@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Layout from "./shared/Layout";
 
 function ComplaintForm() {
   const [category, setCategory] = useState("");
@@ -18,20 +19,20 @@ function ComplaintForm() {
   };
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 ml-0 lg:ml-64">
+    <Layout>
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-8">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Submit a Complaint</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700 p-8">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-gray-100 mb-6">Submit a Complaint</h2>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="form-control w-full">
             <label className="label pb-3">
-              <span className="label-text font-semibold text-lg p-3 text-gray-700 dark:text-gray-300">
+              <span className="label-text font-semibold text-lg p-3 text-slate-700 dark:text-gray-300">
                 Category
               </span>
             </label>
             <select
-              className="select select-bordered border focus:ring focus:border text-base placeholder"
+              className="select select-bordered border focus:ring focus:border text-base placeholder bg-white dark:bg-gray-700 border-slate-300 dark:border-gray-600 focus:border-emerald-500 dark:focus:border-emerald-400"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
@@ -124,7 +125,7 @@ function ComplaintForm() {
         </form>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import Layout from "./shared/Layout";
 
 export default function Profile({ setCurrentPage }) {
   const [profilePhoto, setProfilePhoto] = useState(null);
@@ -38,9 +39,9 @@ export default function Profile({ setCurrentPage }) {
   };
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 ml-0 lg:ml-64">
+    <Layout>
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">User Profile</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-gray-100 mb-6">User Profile</h2>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Profile Photo Section */}
@@ -182,6 +183,6 @@ export default function Profile({ setCurrentPage }) {
         </div>
       </form>
       </div>
-    </div>
+    </Layout>
   );
 }
