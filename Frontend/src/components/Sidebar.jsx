@@ -22,6 +22,65 @@ const menuItems = [
 ];
 
 export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setSidebarOpen, onLogout }) {
+
+  // Enhanced logout function that clears all data
+  const handleLogout = () => {
+    // Show confirmation dialog
+    const confirmLogout = window.confirm(
+      "Are you sure you want to logout? This will clear all your saved data including profile information and Aadhaar verification."
+    );
+
+    if (confirmLogout) {
+      try {
+        // Clear all specific application data
+        const keysToRemove = [
+          'userProfile',           // Profile data
+          'aadhaarVerification',   // Aadhaar verification data
+          'complaintDraft',        // Any draft complaints
+          'userPreferences',       // User preferences if any
+          'sessionData',           // Session data if any
+          'tempData'              // Any temporary data
+        ];
+
+        // Remove specific keys first (more controlled approach)
+        keysToRemove.forEach(key => {
+          localStorage.removeItem(key);
+        });
+
+        // Alternative: Clear all localStorage (more aggressive approach)
+        // Uncomment the line below if you want to clear ALL localStorage data
+        // localStorage.clear();
+
+        // Also clear sessionStorage if you're using it
+        sessionStorage.clear();
+
+        // Close sidebar if open
+        if (sidebarOpen) setSidebarOpen(false);
+
+        // Reset to dashboard page
+        if (setCurrentPage) {
+          setCurrentPage("dashboard");
+        }
+
+        // Call parent logout handler if provided
+        if (onLogout) {
+          onLogout();
+        }
+
+        // Optional: Show success message
+        alert("Successfully logged out! All data has been cleared.");
+
+        // Optional: Redirect to login page or refresh the page
+        // window.location.reload(); // Uncomment if you want to refresh the page
+        // window.location.href = '/login'; // Uncomment if you have a login route
+
+      } catch (error) {
+        console.error('Error during logout:', error);
+        alert("An error occurred during logout. Please try again.");
+      }
+    }
+  };
+
   return (
     <aside
       className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ease-in-out duration-300 bg-white border-r border-gray-200 flex flex-col ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -75,26 +134,19 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
 
       {/* Bottom Section */}
       <div className="px-4 pb-4">
-        {/* Logout Button */}
+        {/* Enhanced Logout Button with confirmation */}
         <button
-          onClick={() => {
-            if (sidebarOpen) setSidebarOpen(false);
-            if (onLogout) onLogout();
-          }}
-          className="flex items-center w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 border-2 border-red-200 hover:border-red-300 mb-4"
+          onClick={handleLogout}
+          className="flex items-center w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 border-2 border-red-200 hover:border-red-300 mb-4 group"
         >
-          <FaSignOutAlt className="text-lg mr-4" />
+          <FaSignOutAlt className="text-lg mr-4 group-hover:animate-pulse" />
           <span className="text-sm font-medium">Logout</span>
         </button>
 
         {/* Footer */}
         <div className="pt-3 border-t border-gray-200 text-center">
-          <p className="text-xs text-gray-500 mb-1">
-            Version 1.0.0
-          </p>
-          <p className="text-xs text-gray-400">
-            © 2025 CivicSecure
-          </p>
+          <p className="text-xs text-gray-500 mb-1">Version 1.0.0</p>
+          <p className="text-xs text-gray-400">© 2025 CivicSecure</p>
         </div>
       </div>
     </aside>

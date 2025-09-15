@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FaSearch, FaSpinner, FaCheckCircle, FaClock, FaExclamationTriangle } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { FaSearch, FaSpinner, FaCheckCircle, FaClock, FaExclamationTriangle, FaFileAlt, FaMapMarkerAlt, FaUser, FaCalendarAlt } from 'react-icons/fa';
 import Layout from './Layout';
 
 const statusSteps = [
@@ -13,40 +13,118 @@ const TrackStatus = () => {
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(null);
     const [error, setError] = useState('');
+    const [submittedComplaints, setSubmittedComplaints] = useState([]);
 
-    // Dummy status data (later you can fetch from backend API)
+    // Load submitted complaints from localStorage
+    useEffect(() => {
+        loadSubmittedComplaints();
+    }, []);
+
+    const loadSubmittedComplaints = () => {
+        try {
+            const complaints = localStorage.getItem('submittedComplaints');
+            if (complaints) {
+                setSubmittedComplaints(JSON.parse(complaints));
+            }
+        } catch (error) {
+            console.error('Error loading submitted complaints:', error);
+        }
+    };
+
+    // Enhanced mock status data with more realistic data
     const mockStatus = {
         "12345": {
-            id: "12345",
-            title: "Pothole near Market Road",
+            id: "CMP-2025-012345",
+            title: "Pothole near Market Road causing traffic issues",
+            category: "Infrastructure",
             status: "In Review",
+            priority: "High",
             lastUpdate: "2025-09-12",
-            department: "Municipal Corporation",
+            submittedDate: "2025-09-10",
+            department: "Municipal Corporation - Road Department",
+            reporterType: "Verified",
+            location: "Market Road, near Bus Stand, Sector 15",
+            description: "Large pothole causing traffic congestion and vehicle damage. Multiple complaints received from residents.",
+            estimatedResolution: "2025-09-20",
+            assignedOfficer: "Mr. Rajesh Kumar",
             history: [
-                { step: "Pending", date: "2025-09-10", remark: "Complaint filed successfully" },
-                { step: "In Review", date: "2025-09-12", remark: "Assigned to field officer for inspection" },
+                {
+                    step: "Pending",
+                    date: "2025-09-10",
+                    time: "10:30 AM",
+                    remark: "Complaint filed successfully via online portal. Complaint ID generated and confirmation sent.",
+                    officer: "System"
+                },
+                {
+                    step: "In Review",
+                    date: "2025-09-12",
+                    time: "2:15 PM",
+                    remark: "Assigned to field officer for inspection. Site visit scheduled within 48 hours.",
+                    officer: "Dept. Coordinator"
+                },
             ],
         },
         "67890": {
-            id: "67890",
-            title: "Street Light not working",
+            id: "CMP-2025-067890",
+            title: "Street Light not working - Safety concern",
+            category: "Safety",
             status: "Resolved",
+            priority: "Medium",
             lastUpdate: "2025-09-10",
-            department: "Electricity Board",
+            submittedDate: "2025-09-08",
+            department: "Electricity Board - Public Lighting Division",
+            reporterType: "Anonymous",
+            location: "Main Street, Block A, Residential Area",
+            description: "Street light pole #45 not functioning for past week. Area becomes very dark at night causing safety concerns.",
+            estimatedResolution: "2025-09-10",
+            assignedOfficer: "Ms. Priya Sharma",
+            actualResolution: "2025-09-10",
             history: [
-                { step: "Pending", date: "2025-09-08", remark: "Complaint filed successfully" },
-                { step: "In Review", date: "2025-09-09", remark: "Inspection scheduled and completed" },
-                { step: "Resolved", date: "2025-09-10", remark: "Street light repaired and tested" },
+                {
+                    step: "Pending",
+                    date: "2025-09-08",
+                    time: "6:45 PM",
+                    remark: "Complaint registered via mobile app. Photos attached showing non-functional street light.",
+                    officer: "System"
+                },
+                {
+                    step: "In Review",
+                    date: "2025-09-09",
+                    time: "9:00 AM",
+                    remark: "Technical team dispatched for inspection. Faulty bulb and wiring issues identified.",
+                    officer: "Technical Supervisor"
+                },
+                {
+                    step: "Resolved",
+                    date: "2025-09-10",
+                    time: "4:30 PM",
+                    remark: "Street light repaired and tested. New LED bulb installed. Area properly illuminated now.",
+                    officer: "Field Technician"
+                },
             ],
         },
         "54321": {
-            id: "54321",
-            title: "Garbage collection delay",
+            id: "CMP-2025-054321",
+            title: "Garbage collection delay - Hygiene issue",
+            category: "Environment",
             status: "Pending",
+            priority: "Medium",
             lastUpdate: "2025-09-14",
-            department: "Sanitation Department",
+            submittedDate: "2025-09-14",
+            department: "Sanitation Department - Waste Management",
+            reporterType: "Pseudonymous",
+            location: "Green Valley Apartments, Phase 2",
+            description: "Garbage not collected for 4 days. Overflowing bins causing bad smell and attracting pests.",
+            estimatedResolution: "2025-09-18",
+            assignedOfficer: "Mr. Suresh Yadav",
             history: [
-                { step: "Pending", date: "2025-09-14", remark: "Complaint registered and pending review" },
+                {
+                    step: "Pending",
+                    date: "2025-09-14",
+                    time: "8:20 AM",
+                    remark: "Complaint registered online with photo evidence. Forwarded to sanitation department for immediate action.",
+                    officer: "System"
+                },
             ],
         },
     };
@@ -95,15 +173,29 @@ const TrackStatus = () => {
         }
     };
 
+    const getPriorityColor = (priority) => {
+        switch (priority) {
+            case "High": return "text-red-600 bg-red-50";
+            case "Medium": return "text-yellow-600 bg-yellow-50";
+            case "Low": return "text-green-600 bg-green-50";
+            default: return "text-gray-600 bg-gray-50";
+        }
+    };
+
     return (
         <Layout>
             <div className="w-full max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center mb-6">
                     <FaSearch className="text-3xl text-emerald-600 mr-3" />
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                        Track Complaint Status
-                    </h1>
+                    <div>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                            Track Complaint Status
+                        </h1>
+                        <p className="text-gray-600 text-sm sm:text-base mt-1">
+                            Monitor your complaint progress and get real-time updates
+                        </p>
+                    </div>
                 </div>
 
                 {/* Search Section */}
@@ -121,7 +213,7 @@ const TrackStatus = () => {
                                 <input
                                     type="text"
                                     className={`flex-1 px-4 py-3 bg-white border rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${error ? 'border-red-500' : 'border-gray-300'}`}
-                                    placeholder="Enter your complaint ID (e.g., 12345)"
+                                    placeholder="Enter your complaint ID (e.g., CMP-2025-012345)"
                                     value={complaintId}
                                     onChange={(e) => handleInputChange(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleTrack()}
@@ -145,7 +237,10 @@ const TrackStatus = () => {
                                 </button>
                             </div>
                             {error && (
-                                <p className="text-red-600 text-sm mt-1">{error}</p>
+                                <p className="text-red-600 text-sm mt-1 flex items-center">
+                                    <FaExclamationTriangle className="mr-1" />
+                                    {error}
+                                </p>
                             )}
                         </div>
 
@@ -161,7 +256,7 @@ const TrackStatus = () => {
                                         onClick={() => handleInputChange(id)}
                                         className="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-sm rounded-md font-mono transition-colors duration-200"
                                     >
-                                        {id}
+                                        {mockStatus[id].id}
                                     </button>
                                 ))}
                             </div>
@@ -171,43 +266,92 @@ const TrackStatus = () => {
 
                 {/* Status Results */}
                 {status && status !== "not-found" && (
-                    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 space-y-6">
-                        {/* Complaint Details */}
-                        <div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                                Complaint Details
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-6">
+                        {/* Complaint Overview */}
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+                            <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <span className="font-medium text-gray-900">Complaint ID:</span>
-                                    <span className="ml-2 font-mono text-gray-900">{status.id}</span>
+                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                        {status.title}
+                                    </h3>
+                                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                                        <span className="flex items-center">
+                                            <FaFileAlt className="mr-1" />
+                                            {status.id}
+                                        </span>
+                                        <span className="flex items-center">
+                                            <FaCalendarAlt className="mr-1" />
+                                            {status.submittedDate}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span className="font-medium text-gray-900">Current Status:</span>
-                                    <span className={`ml-2 font-semibold ${getStatusColor(status.status)}`}>
+                                <div className="flex flex-col items-end gap-2">
+                                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(status.status).replace('text-', 'text-')} ${getStatusColor(status.status).replace('text-', 'bg-').replace('-600', '-100')}`}>
                                         {status.status}
                                     </span>
-                                </div>
-                                <div>
-                                    <span className="font-medium text-gray-900">Department:</span>
-                                    <span className="ml-2 text-gray-700">{status.department}</span>
-                                </div>
-                                <div>
-                                    <span className="font-medium text-gray-900">Last Updated:</span>
-                                    <span className="ml-2 text-gray-700">{status.lastUpdate}</span>
+                                    <span className={`px-2 py-1 text-xs font-medium rounded ${getPriorityColor(status.priority)}`}>
+                                        {status.priority} Priority
+                                    </span>
                                 </div>
                             </div>
-                            <div className="mt-4">
-                                <span className="font-medium text-gray-900">Issue:</span>
-                                <p className="mt-1 text-gray-700">{status.title}</p>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <div>
+                                        <span className="font-medium text-gray-900">Category:</span>
+                                        <span className="ml-2 text-gray-700">{status.category}</span>
+                                    </div>
+                                    <div>
+                                        <span className="font-medium text-gray-900">Department:</span>
+                                        <span className="ml-2 text-gray-700">{status.department}</span>
+                                    </div>
+                                    <div>
+                                        <span className="font-medium text-gray-900">Assigned Officer:</span>
+                                        <span className="ml-2 text-gray-700">{status.assignedOfficer}</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <div>
+                                        <span className="font-medium text-gray-900">Reporter Type:</span>
+                                        <span className="ml-2 text-gray-700">{status.reporterType}</span>
+                                    </div>
+                                    <div>
+                                        <span className="font-medium text-gray-900">Last Updated:</span>
+                                        <span className="ml-2 text-gray-700">{status.lastUpdate}</span>
+                                    </div>
+                                    <div>
+                                        <span className="font-medium text-gray-900">Expected Resolution:</span>
+                                        <span className="ml-2 text-gray-700">
+                                            {status.actualResolution || status.estimatedResolution}
+                                            {status.actualResolution && <span className="text-green-600 ml-1">✓</span>}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                <div className="mb-2">
+                                    <span className="font-medium text-gray-900 flex items-center">
+                                        <FaMapMarkerAlt className="mr-1" />
+                                        Location:
+                                    </span>
+                                </div>
+                                <p className="text-gray-700 ml-5">{status.location}</p>
+                            </div>
+
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                <div className="mb-2">
+                                    <span className="font-medium text-gray-900">Description:</span>
+                                </div>
+                                <p className="text-gray-700">{status.description}</p>
                             </div>
                         </div>
 
                         {/* Status Timeline */}
-                        <div>
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
                             <h4 className="text-lg font-semibold text-gray-900 mb-4">Progress Timeline</h4>
                             <div className="relative">
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-between mb-8">
                                     {statusSteps.map((step, idx) => {
                                         const StepIcon = step.icon;
                                         const isCompleted = idx <= currentStepIndex;
@@ -252,24 +396,31 @@ const TrackStatus = () => {
 
                         {/* Status History */}
                         {status.history && (
-                            <div>
-                                <h4 className="text-lg font-semibold text-gray-900 mb-4">Status History</h4>
+                            <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+                                <h4 className="text-lg font-semibold text-gray-900 mb-4">Detailed Status History</h4>
                                 <div className="space-y-4">
                                     {status.history.map((event, idx) => {
                                         const stepInfo = statusSteps.find(step => step.label === event.step);
                                         const StepIcon = stepInfo?.icon || FaCheckCircle;
 
                                         return (
-                                            <div key={idx} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${stepInfo?.color || 'bg-gray-500'}`}>
+                                            <div key={idx} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg border-l-4 border-emerald-500">
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${stepInfo?.color || 'bg-gray-500'}`}>
                                                     <StepIcon className="text-sm" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <div className="flex items-center justify-between mb-1">
+                                                    <div className="flex items-center justify-between mb-2">
                                                         <span className="font-semibold text-gray-900">{event.step}</span>
-                                                        <span className="text-sm text-gray-600">{event.date}</span>
+                                                        <div className="text-sm text-gray-600 text-right">
+                                                            <div>{event.date}</div>
+                                                            <div className="text-xs">{event.time}</div>
+                                                        </div>
                                                     </div>
-                                                    <p className="text-gray-700 text-sm">{event.remark}</p>
+                                                    <p className="text-gray-700 text-sm mb-2">{event.remark}</p>
+                                                    <div className="flex items-center text-xs text-gray-500">
+                                                        <FaUser className="mr-1" />
+                                                        Updated by: {event.officer}
+                                                    </div>
                                                 </div>
                                             </div>
                                         );
