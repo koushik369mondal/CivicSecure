@@ -5,7 +5,9 @@ import {
   FaChartBar, 
   FaInfoCircle, 
   FaComments, 
-  FaIdCard 
+  FaIdCard,
+  FaUser,
+  FaSignOutAlt
 } from "react-icons/fa";
 
 const menuItems = [
@@ -14,10 +16,11 @@ const menuItems = [
   { id: "track-status", label: "Track Status", icon: FaChartBar },
   { id: "info-hub", label: "Info Hub", icon: FaInfoCircle },
   { id: "community", label: "Community", icon: FaComments },
-  { id: "aadhaar-verify", label: "Aadhaar Verify", icon: FaIdCard }
+  { id: "aadhaar-verify", label: "Aadhaar Verify", icon: FaIdCard },
+  { id: "profile", label: "Profile", icon: FaUser } // Added profile back to menuItems
 ];
 
-export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setSidebarOpen }) {
+export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setSidebarOpen, onLogout }) {
   return (
     <aside
       className={`sidebar fixed top-0 left-0 z-40 w-72 h-screen transition-transform ease-in-out duration-300 ${
@@ -55,6 +58,20 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
             </button>
           </li>
         ))}
+
+        {/* Logout Button - Separate from regular menu items */}
+        <li className="mt-6 pt-3 border-t border-sidebar-border">
+          <button
+            onClick={() => {
+              if (sidebarOpen) setSidebarOpen(false);
+              if (onLogout) onLogout();
+            }}
+            className="flex items-center w-full p-4 rounded-lg font-semibold text-red-600 hover:bg-red-600 hover:text-white transition"
+          >
+            <FaSignOutAlt className="text-2xl mr-4" />
+            <span className="text-lg">Logout</span>
+          </button>
+        </li>
       </ul>
     </aside>
   );
