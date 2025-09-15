@@ -91,7 +91,7 @@ const Login = ({ onSwitchToRegister }) => {
                     <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-5 text-center">
                         <p className="text-lg font-semibold text-gray-700 mb-3">🔐 Prototype Mode</p>
                         <div className="text-2xl font-bold text-blue-600 font-mono tracking-widest mb-2">{mockOTP}</div>
-                        <p className="text-sm text-gray-500">In production, this would be sent via SMS</p>
+                        <p className="text-sm text-gray-600">In production, this would be sent via SMS</p>
                     </div>
 
                     <form className="space-y-6" onSubmit={handleOTPSubmit}>

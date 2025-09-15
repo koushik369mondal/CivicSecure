@@ -1,11 +1,11 @@
 import React from "react";
-import { FaExclamationTriangle, FaCheckCircle, FaClock, FaEye, FaPlus, FaMoon, FaSun } from "react-icons/fa";
-import Layout from "./shared/Layout";
+import { FaExclamationTriangle, FaCheckCircle, FaClock, FaEye, FaPlus } from "react-icons/fa";
+import Layout from "./Layout";
 
-function Dashboard({ toggleTheme, theme, setCurrentPage }) {
+function Dashboard({ setCurrentPage }) {
   const stats = [
-    { label: "Total Complaints", value: "24", icon: FaExclamationTriangle, color: "text-emerald-600" },
-    { label: "Resolved", value: "18", icon: FaCheckCircle, color: "text-emerald-700" },
+    { label: "Total Complaints", value: "24", icon: FaExclamationTriangle, color: "text-green-600" },
+    { label: "Resolved", value: "18", icon: FaCheckCircle, color: "text-green-700" },
     { label: "Pending", value: "6", icon: FaClock, color: "text-amber-500" },
     { label: "In Review", value: "3", icon: FaEye, color: "text-blue-600" }
   ];
@@ -22,24 +22,16 @@ function Dashboard({ toggleTheme, theme, setCurrentPage }) {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-gray-100 mb-2">Dashboard</h1>
-            <p className="text-emerald-700 dark:text-emerald-400 text-base">Welcome back! Here's your complaint overview</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
+            <p className="text-gray-700 text-base">Welcome back! Here's your complaint overview</p>
           </div>
           <div className="flex items-center space-x-3">
             <button
-              className="btn bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-sm btn-md flex items-center gap-2"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-sm flex items-center gap-2 font-medium transition-colors"
               onClick={() => setCurrentPage("file-complaint")}
             >
               <FaPlus />
               New Complaint
-            </button>
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle dark mode"
-              className="btn btn-outline border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 dark:border-gray-600 dark:hover:border-emerald-400 dark:hover:bg-emerald-900/20 btn-square"
-              title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-            >
-              {theme === "light" ? <FaMoon className="text-slate-600" /> : <FaSun className="text-amber-400" />}
             </button>
           </div>
         </div>
@@ -49,12 +41,12 @@ function Dashboard({ toggleTheme, theme, setCurrentPage }) {
           {stats.map(({ label, value, icon: Icon, color }, i) => (
             <div
               key={i}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700 p-6"
+              className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-gray-100">{value}</h3>
-                  <p className="text-slate-600 dark:text-gray-400 font-medium text-sm">{label}</p>
+                  <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
+                  <p className="text-gray-700 font-medium text-sm">{label}</p>
                 </div>
                 <Icon className={`${color} text-3xl`} />
               </div>
@@ -63,35 +55,35 @@ function Dashboard({ toggleTheme, theme, setCurrentPage }) {
         </div>
 
         {/* Recent Complaints */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700">
+        <div className="bg-white rounded-lg shadow-md border border-gray-200">
           <div className="p-6">
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-gray-100 mb-4">Recent Complaints</h2>
-            <div className="divide-y divide-slate-200 dark:divide-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Complaints</h2>
+            <div className="divide-y divide-gray-200">
               {recentComplaints.map(({ id, category, status, date }) => (
                 <div key={id} className="py-4 flex justify-between items-center">
                   <div>
-                    <p className="font-medium text-slate-900 dark:text-gray-100">{id}</p>
-                    <p className="text-sm text-slate-600 dark:text-gray-400">{category}</p>
+                    <p className="font-medium text-gray-900">{id}</p>
+                    <p className="text-sm text-gray-700">{category}</p>
                   </div>
                   <div className="text-right">
                     <span
-                      className={`badge ${
+                      className={`px-2 py-1 text-xs font-medium rounded-full ${
                         status === "Resolved"
-                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300"
+                          ? "bg-green-100 text-green-800"
                           : status === "Pending"
-                          ? "bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
-                          : "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300"
-                      } border-none`}
+                          ? "bg-amber-100 text-amber-800"
+                          : "bg-blue-100 text-blue-800"
+                      }`}
                     >
                       {status}
                     </span>
-                    <p className="text-xs text-slate-500 dark:text-gray-500 mt-1">{date}</p>
+                    <p className="text-xs text-gray-600 mt-1">{date}</p>
                   </div>
                 </div>
               ))}
             </div>
             <div className="flex justify-end mt-6">
-              <button className="btn btn-outline border-emerald-300 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-400 dark:border-emerald-400 dark:text-emerald-400 dark:hover:bg-emerald-900/20">
+              <button className="px-4 py-2 border border-green-300 text-gray-900 hover:bg-green-50 hover:border-green-400 rounded-md font-medium transition-colors">
                 View All
               </button>
             </div>

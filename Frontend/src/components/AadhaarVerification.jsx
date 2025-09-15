@@ -1,28 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaIdCard, FaCheckCircle, FaExclamationTriangle, FaClock, FaSpinner, FaRedo, FaArrowLeft, FaUpload, FaTimes } from 'react-icons/fa';
-import { validateAadhaarNumber } from '../../utils/verhoeff';
-import { 
-  generateSecureOTP, 
-  validateOTP, 
-  validatePhoneNumber, 
-  maskPhoneNumber, 
-  formatTime, 
-  OTP_TIMER_DURATION, 
+import { validateAadhaarNumber } from '../utils/verhoeff';
+import {
+  generateSecureOTP,
+  validateOTP,
+  validatePhoneNumber,
+  maskPhoneNumber,
+  formatTime,
+  OTP_TIMER_DURATION,
   RESEND_COOLDOWN,
-  isDev 
-} from '../../utils/otp';
+  isDev
+} from '../utils/otp';
 import Layout from './Layout';
 
 const VERIFICATION_STORAGE_KEY = 'aadhaarVerification';
 const VERIFICATION_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
-const AadhaarVerification = ({ 
-  initialAadhaar = '', 
-  initialPhone = '', 
+const AadhaarVerification = ({
+  initialAadhaar = '',
+  initialPhone = '',
   onVerificationComplete,
   onCancel,
   title = "Aadhaar Verification",
-  showTitle = true 
+  showTitle = true
 }) => {
   // Form state
   const [step, setStep] = useState('form');
@@ -74,7 +74,7 @@ const AadhaarVerification = ({
         const data = JSON.parse(stored);
         const now = new Date().getTime();
         const verificationTime = new Date(data.verificationTimestamp).getTime();
-        
+
         if (now - verificationTime < VERIFICATION_DURATION) {
           setVerificationData(data);
           setStep('success');
@@ -106,7 +106,7 @@ const AadhaarVerification = ({
   // Handle input changes
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // Clear specific field error when user starts typing
     switch (field) {
       case 'aadhaarNumber':
@@ -178,7 +178,7 @@ const AadhaarVerification = ({
   const startOtpTimer = () => {
     setOtpTimer(OTP_TIMER_DURATION);
     setShowOtpExpired(false);
-    
+
     otpIntervalRef.current = setInterval(() => {
       setOtpTimer(prev => {
         if (prev <= 1) {
@@ -194,7 +194,7 @@ const AadhaarVerification = ({
   // Start resend cooldown
   const startResendCooldown = () => {
     setResendCooldown(RESEND_COOLDOWN);
-    
+
     resendIntervalRef.current = setInterval(() => {
       setResendCooldown(prev => {
         if (prev <= 1) {
@@ -306,22 +306,22 @@ const AadhaarVerification = ({
   // Handle resend OTP
   const handleResendOTP = async () => {
     if (resendCooldown > 0) return;
-    
+
     setLoading(true);
     clearAllErrors();
 
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Generate new OTP
       const otp = generateSecureOTP();
       setDevOTP(otp);
-      
+
       // Reset timers
       startOtpTimer();
       startResendCooldown();
-      
+
       setLoading(false);
     } catch (error) {
       setGeneralError('Failed to resend OTP. Please try again.');
@@ -339,11 +339,11 @@ const AadhaarVerification = ({
     setResendCooldown(0);
     setShowOtpExpired(false);
     setVerificationData(null);
-    
+
     // Clear images
     removeImage('front');
     removeImage('back');
-    
+
     // Clear timers
     if (otpIntervalRef.current) {
       clearInterval(otpIntervalRef.current);
@@ -353,7 +353,7 @@ const AadhaarVerification = ({
       clearInterval(resendIntervalRef.current);
       resendIntervalRef.current = null;
     }
-    
+
     // Clear stored verification
     localStorage.removeItem(VERIFICATION_STORAGE_KEY);
   };
@@ -368,7 +368,7 @@ const AadhaarVerification = ({
   const maskAadhaar = (aadhaarNumber) => {
     if (!aadhaarNumber || aadhaarNumber.length !== 12) return 'Not provided';
     const lastFour = aadhaarNumber.slice(-4);
-    return `*****-${lastFour}`;
+    return `****-****-${lastFour}`;
   };
 
   // Check if form can be submitted
@@ -377,7 +377,7 @@ const AadhaarVerification = ({
     const hasValidPhone = validatePhoneNumber(formData.phoneNumber).isValid;
     const hasImages = frontImage && backImage;
     const noImageErrors = Object.keys(imageErrors).length === 0 || Object.values(imageErrors).every(error => !error);
-    
+
     return hasValidAadhaar && hasValidPhone && hasImages && noImageErrors;
   };
 
@@ -398,7 +398,7 @@ const AadhaarVerification = ({
         {showTitle && (
           <div className="flex items-center mb-6">
             <FaIdCard className="text-3xl text-emerald-600 mr-3" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-gray-100">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               {title}
             </h1>
           </div>
@@ -406,14 +406,14 @@ const AadhaarVerification = ({
 
         {/* Form Step */}
         {step === 'form' && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700 p-6">
-            <h2 className="text-xl font-semibold mb-4 text-slate-900 dark:text-gray-100">
+          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">
               Verify Your Aadhaar
             </h2>
             <form onSubmit={handleSendOTP} className="space-y-6">
               {/* Aadhaar Number Input */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   Aadhaar Number
                 </label>
                 <input
@@ -421,18 +421,18 @@ const AadhaarVerification = ({
                   value={formData.aadhaarNumber}
                   onChange={(e) => handleInputChange('aadhaarNumber', e.target.value.replace(/\D/g, ''))}
                   placeholder="Enter your 12-digit Aadhaar number"
-                  className={`input input-bordered w-full max-w-md bg-white dark:bg-gray-700 border-slate-300 dark:border-gray-600 focus:border-emerald-500 dark:focus:border-emerald-400 ${aadhaarError ? 'border-red-500 dark:border-red-400' : ''}`}
+                  className={`w-full px-4 py-3 bg-white border rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${aadhaarError ? 'border-red-500' : 'border-gray-300'}`}
                   maxLength={12}
                   required
                 />
                 {aadhaarError && (
-                  <p className="text-red-600 dark:text-red-400 text-sm mt-1">{aadhaarError}</p>
+                  <p className="text-red-600 text-sm mt-1">{aadhaarError}</p>
                 )}
               </div>
 
               {/* Phone Number Input */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   Phone Number
                 </label>
                 <input
@@ -440,18 +440,18 @@ const AadhaarVerification = ({
                   value={formData.phoneNumber}
                   onChange={(e) => handleInputChange('phoneNumber', e.target.value.replace(/\D/g, ''))}
                   placeholder="Enter your 10-digit phone number"
-                  className={`input input-bordered w-full max-w-md bg-white dark:bg-gray-700 border-slate-300 dark:border-gray-600 focus:border-emerald-500 dark:focus:border-emerald-400 ${phoneError ? 'border-red-500 dark:border-red-400' : ''}`}
+                  className={`w-full px-4 py-3 bg-white border rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${phoneError ? 'border-red-500' : 'border-gray-300'}`}
                   maxLength={10}
                   required
                 />
                 {phoneError && (
-                  <p className="text-red-600 dark:text-red-400 text-sm mt-1">{phoneError}</p>
+                  <p className="text-red-600 text-sm mt-1">{phoneError}</p>
                 )}
               </div>
 
               {/* Image Upload - Front Side */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   Front Side of Aadhaar Card
                 </label>
                 <div className="space-y-3">
@@ -460,22 +460,22 @@ const AadhaarVerification = ({
                     type="file"
                     accept="image/*"
                     onChange={(e) => e.target.files[0] && handleImageUpload(e.target.files[0], 'front')}
-                    className="file-input file-input-bordered w-full max-w-md bg-white dark:bg-gray-700 border-slate-300 dark:border-gray-600"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                   {imageErrors.front && (
-                    <p className="text-red-600 dark:text-red-400 text-sm">{imageErrors.front}</p>
+                    <p className="text-red-600 text-sm">{imageErrors.front}</p>
                   )}
                   {frontPreview && (
                     <div className="relative inline-block">
                       <img
                         src={frontPreview}
                         alt="Front side preview"
-                        className="w-48 h-32 object-cover rounded-lg border border-slate-300 dark:border-gray-600"
+                        className="w-48 h-32 object-cover rounded-lg border border-gray-300"
                       />
                       <button
                         type="button"
                         onClick={() => removeImage('front')}
-                        className="absolute -top-2 -right-2 btn btn-circle btn-sm bg-red-500 hover:bg-red-600 text-white border-none"
+                        className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-sm"
                       >
                         <FaTimes />
                       </button>
@@ -486,7 +486,7 @@ const AadhaarVerification = ({
 
               {/* Image Upload - Back Side */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   Back Side of Aadhaar Card
                 </label>
                 <div className="space-y-3">
@@ -495,22 +495,22 @@ const AadhaarVerification = ({
                     type="file"
                     accept="image/*"
                     onChange={(e) => e.target.files[0] && handleImageUpload(e.target.files[0], 'back')}
-                    className="file-input file-input-bordered w-full max-w-md bg-white dark:bg-gray-700 border-slate-300 dark:border-gray-600"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                   {imageErrors.back && (
-                    <p className="text-red-600 dark:text-red-400 text-sm">{imageErrors.back}</p>
+                    <p className="text-red-600 text-sm">{imageErrors.back}</p>
                   )}
                   {backPreview && (
                     <div className="relative inline-block">
                       <img
                         src={backPreview}
                         alt="Back side preview"
-                        className="w-48 h-32 object-cover rounded-lg border border-slate-300 dark:border-gray-600"
+                        className="w-48 h-32 object-cover rounded-lg border border-gray-300"
                       />
                       <button
                         type="button"
                         onClick={() => removeImage('back')}
-                        className="absolute -top-2 -right-2 btn btn-circle btn-sm bg-red-500 hover:bg-red-600 text-white border-none"
+                        className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-sm"
                       >
                         <FaTimes />
                       </button>
@@ -520,26 +520,32 @@ const AadhaarVerification = ({
               </div>
 
               {generalError && (
-                <div className="alert bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200">
-                  <FaExclamationTriangle className="h-5 w-5" />
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md flex items-center">
+                  <FaExclamationTriangle className="h-5 w-5 mr-2" />
                   <span>{generalError}</span>
                 </div>
               )}
-              
+
               <div className="flex gap-4">
-                <button 
-                  type="submit" 
-                  className={`btn bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-sm ${loading ? 'loading' : ''}`}
+                <button
+                  type="submit"
+                  className={`px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-md shadow-sm transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={loading || !canSubmitForm()}
                 >
-                  {loading ? <FaSpinner className="animate-spin mr-2" /> : null}
-                  {loading ? 'Sending OTP...' : 'Send OTP'}
+                  {loading ? (
+                    <>
+                      <FaSpinner className="animate-spin mr-2 inline-block" />
+                      Sending OTP...
+                    </>
+                  ) : (
+                    'Send OTP'
+                  )}
                 </button>
                 {onCancel && (
                   <button
                     type="button"
                     onClick={onCancel}
-                    className="btn btn-outline border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                    className="px-6 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-semibold rounded-md transition-colors duration-200"
                   >
                     Cancel
                   </button>
@@ -551,27 +557,27 @@ const AadhaarVerification = ({
 
         {/* OTP Step */}
         {step === 'otp' && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700 p-6">
-            <h2 className="text-xl font-semibold mb-4 text-slate-900 dark:text-gray-100">Enter OTP</h2>
-            <p className="text-slate-600 dark:text-gray-400 mb-4">
+          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">Enter OTP</h2>
+            <p className="text-gray-700 mb-4">
               OTP has been sent to {maskPhoneNumber(formData.phoneNumber)}
             </p>
-            
+
             {/* Development OTP Display */}
             {isDev && devOTP && (
-              <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg mb-4 border border-blue-200 dark:border-blue-700">
-                <p className="text-blue-800 dark:text-blue-200 text-sm font-medium mb-1">
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
+                <p className="text-blue-800 text-sm font-medium mb-1">
                   🔧 Development Mode
                 </p>
-                <p className="text-blue-700 dark:text-blue-300 text-lg font-mono">
+                <p className="text-blue-700 text-lg font-mono">
                   OTP: <span className="font-bold">{devOTP}</span>
                 </p>
               </div>
             )}
-            
+
             <form onSubmit={handleVerifyOTP} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   OTP
                 </label>
                 <input
@@ -579,60 +585,66 @@ const AadhaarVerification = ({
                   value={formData.otp}
                   onChange={(e) => handleInputChange('otp', e.target.value.replace(/\D/g, ''))}
                   placeholder="Enter 6-digit OTP"
-                  className={`input input-bordered w-full max-w-md bg-white dark:bg-gray-700 border-slate-300 dark:border-gray-600 focus:border-emerald-500 dark:focus:border-emerald-400 ${otpError ? 'border-red-500 dark:border-red-400' : ''}`}
+                  className={`w-full px-4 py-3 bg-white border rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${otpError ? 'border-red-500' : 'border-gray-300'}`}
                   maxLength={6}
                   required
                 />
                 {otpError && (
-                  <p className="text-red-600 dark:text-red-400 text-sm mt-1">{otpError}</p>
+                  <p className="text-red-600 text-sm mt-1">{otpError}</p>
                 )}
               </div>
-              
-              <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-gray-400">
+
+              <div className="flex items-center gap-4 text-sm text-gray-700">
                 {otpTimer > 0 ? (
                   <span className="flex items-center gap-2">
                     <FaClock />
-                    Resend OTP in {formatTime(otpTimer)}
+                    Expires in {formatTime(otpTimer)}
                   </span>
                 ) : (
                   <button
                     type="button"
                     onClick={handleResendOTP}
-                    className="btn btn-link btn-sm p-0 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+                    className="text-emerald-600 hover:text-emerald-700 font-medium underline"
                     disabled={resendCooldown > 0 || loading}
                   >
                     {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend OTP'}
                   </button>
                 )}
               </div>
-              
+
               {showOtpExpired && (
-                <div className="alert bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200">
-                  <FaClock className="h-5 w-5" />
+                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-md flex items-center">
+                  <FaClock className="h-5 w-5 mr-2" />
                   <span>OTP has expired. Please request a new one.</span>
                 </div>
               )}
-              
+
               {generalError && (
-                <div className="alert bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200">
-                  <FaExclamationTriangle className="h-5 w-5" />
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md flex items-center">
+                  <FaExclamationTriangle className="h-5 w-5 mr-2" />
                   <span>{generalError}</span>
                 </div>
               )}
-              
+
               <div className="flex gap-4">
-                <button 
-                  type="submit" 
-                  className={`btn bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-sm ${loading ? 'loading' : ''}`}
+                <button
+                  type="submit"
+                  className={`px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-md shadow-sm transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={loading || showOtpExpired}
                 >
-                  {loading ? <FaSpinner className="animate-spin mr-2" /> : null}
-                  {loading ? 'Verifying...' : 'Verify OTP'}
+                  {loading ? (
+                    <>
+                      <FaSpinner className="animate-spin mr-2 inline-block" />
+                      Verifying...
+                    </>
+                  ) : (
+                    'Verify OTP'
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={handleStartOver}
-                  className="btn btn-outline border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                  className="px-6 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-semibold rounded-md transition-colors duration-200 flex items-center"
                 >
                   <FaArrowLeft className="mr-2" />
                   Start Over
@@ -646,52 +658,76 @@ const AadhaarVerification = ({
         {step === 'success' && (
           <div className="space-y-4">
             {/* Success Banner */}
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-700">
+            <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
               <div className="flex items-center">
-                <FaCheckCircle className="text-emerald-600 dark:text-emerald-400 text-2xl mr-3" />
-                <h2 className="text-xl font-bold text-emerald-800 dark:text-emerald-200">
+                <FaCheckCircle className="text-green-600 text-2xl mr-3" />
+                <h2 className="text-xl font-bold text-green-800">
                   Aadhaar Successfully Verified
                 </h2>
               </div>
             </div>
 
             {/* Verification Details Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold mb-4 text-slate-900 dark:text-gray-100">
+            <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-900">
                 Verification Details
               </h3>
-              
-              <div className="space-y-3">
-                <div>
-                  <span className="text-slate-700 dark:text-gray-300 font-medium">Aadhaar: </span>
-                  <span className="text-slate-900 dark:text-gray-100 font-mono">{maskAadhaar(formData.aadhaarNumber)}</span>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <span className="font-medium text-gray-900 min-w-[120px] mb-1 sm:mb-0">
+                    Aadhaar:
+                  </span>
+                  <span className="text-gray-900 font-mono text-lg">
+                    {maskAadhaar(formData.aadhaarNumber)}
+                  </span>
                 </div>
-                <div>
-                  <span className="text-slate-700 dark:text-gray-300 font-medium">Phone: </span>
-                  <span className="text-slate-900 dark:text-gray-100 font-mono">{maskPhoneNumber(formData.phoneNumber)}</span>
+
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <span className="font-medium text-gray-900 min-w-[120px] mb-1 sm:mb-0">
+                    Phone:
+                  </span>
+                  <span className="text-gray-900 font-mono text-lg">
+                    +91-{maskPhoneNumber(formData.phoneNumber)}
+                  </span>
                 </div>
-                <div>
-                  <span className="text-slate-700 dark:text-gray-300 font-medium">Verified on: </span>
-                  <span className="text-slate-900 dark:text-gray-100">{new Date(verificationData?.verificationTimestamp).toLocaleString()}</span>
+
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <span className="font-medium text-gray-900 min-w-[120px] mb-1 sm:mb-0">
+                    Verified on:
+                  </span>
+                  <span className="text-gray-900">
+                    {new Date(verificationData?.verificationTimestamp).toLocaleString('en-IN', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: true
+                    })}
+                  </span>
                 </div>
               </div>
-              
-              <p className="text-emerald-600 dark:text-emerald-400 text-sm mt-4 italic">
-                ✓ Verification valid for 10 minutes
+
+              <p className="text-green-600 text-sm mt-4 italic font-medium flex items-center">
+                <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                Verification valid for 10 minutes
               </p>
-              
-              <div className="flex gap-4 mt-6">
+
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <button
                   onClick={handleVerifyDifferent}
-                  className="btn bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-sm transition-colors duration-200 flex items-center"
+                  className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-md shadow-sm transition-colors duration-200 flex items-center justify-center"
                 >
                   <FaRedo className="mr-2" />
                   Verify Different Number
                 </button>
-                
+
                 <button
                   onClick={() => window.history.back()}
-                  className="btn btn-outline border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                  className="px-6 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-semibold rounded-md transition-colors duration-200 flex items-center justify-center"
                 >
                   <FaArrowLeft className="mr-2" />
                   Back to Dashboard

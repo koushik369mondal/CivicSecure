@@ -273,7 +273,7 @@ const Register = ({ onSwitchToLogin }) => {
                             <div className="text-2xl font-bold text-blue-600 font-mono tracking-widest mb-2">
                                 {devOTP}
                             </div>
-                            <p className="text-sm text-gray-500">In production, this will be sent via SMS.</p>
+                            <p className="text-sm text-gray-600">In production, this will be sent via SMS.</p>
                         </div>
                     )}
 
@@ -286,7 +286,7 @@ const Register = ({ onSwitchToLogin }) => {
                             type="button"
                             onClick={handleResend}
                             disabled={resendCooldown > 0 || loading}
-                            className={`text-blue-600 font-semibold underline disabled:text-gray-400 disabled:no-underline`}
+                            className={`text-blue-600 font-semibold underline disabled:text-gray-600 disabled:no-underline`}
                             title={resendCooldown > 0 ? `Resend in ${formatTime(resendCooldown)}` : 'Resend OTP'}
                         >
                             {resendCooldown > 0 ? `Resend in ${formatTime(resendCooldown)}` : 'Resend OTP'}
