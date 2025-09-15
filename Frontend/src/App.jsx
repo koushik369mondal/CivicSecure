@@ -4,6 +4,9 @@ import Dashboard from "./components/Dashboard";
 import ComplaintForm from "./components/ComplaintForm";
 import Profile from "./components/Profile";
 import AadhaarVerification from "./components/AadhaarVerification";
+import TrackStatus from "./components/Tracking";
+import InfoHub from "./components/InfoHub";
+import Community from "./components/Community";
 import { FaBars } from "react-icons/fa";
 
 function App() {
@@ -21,8 +24,11 @@ function App() {
       case "aadhaar-verify":
         return <AadhaarVerification setCurrentPage={setCurrentPage} />;
       case "track-status":
+        return <TrackStatus setCurrentPage={setCurrentPage} />;
       case "info-hub":
+        return <InfoHub setCurrentPage={setCurrentPage} />;
       case "community":
+        return <Community setCurrentPage={setCurrentPage} />;
       default:
         return (
           <div className="p-10 text-center text-gray-700 text-lg font-semibold">
