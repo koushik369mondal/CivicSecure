@@ -43,7 +43,7 @@ export const validTestNumbers = [
   '123456789010',  // Test number 1
   '234567890124',  // Test number 2
   '345678901238',  // Test number 3
-  '784568755807',  // Test number 4
+  // '784568755807',  // Test number 4
   '456789012341',  // Test number 5
   '567890123458'   // Test number 6
 ];
