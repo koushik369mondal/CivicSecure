@@ -502,11 +502,11 @@ export default function Profile({ setCurrentPage }) {
         </form>
 
         {/* Profile Data Info */}
-        <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        {/* <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 text-sm text-center">
             ℹ️ Your profile data is automatically saved and will be retained for 10 minutes after each update.
           </p>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );
