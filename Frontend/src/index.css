@@ -75,9 +75,29 @@ body {
   color: var(--foreground-text);
 }
 
-/* Headings */
-h1, h2, h3, h4, h5 {
+/* Headings - apply to main content areas only */
+main h1, 
+main h2, 
+main h3, 
+main h4, 
+main h5,
+.content-area h1,
+.content-area h2,
+.content-area h3,
+.content-area h4,
+.content-area h5 {
   color: var(--text-primary);
+}
+
+/* Allow Tailwind color classes to work in sidebar */
+aside h1.text-emerald-600,
+aside .text-emerald-600 {
+  color: rgb(5 150 105) !important; /* emerald-600 */
+}
+
+/* Ensure emerald colors work everywhere */
+.text-emerald-600 {
+  color: rgb(5 150 105) !important;
 }
 
 /* Labels */
